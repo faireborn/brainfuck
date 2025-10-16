@@ -1,5 +1,6 @@
 const std = @import("std");
 const c = @import("c.zig").c;
+const Allocator = std.mem.Allocator;
 const Brainfuck = @import("brainfuck.zig").Brainfuck(u8, 30_000);
 
 var brainfuck: Brainfuck = undefined;
@@ -26,10 +27,19 @@ pub fn main2() !void {
     var file_buffer: [1024]u8 = undefined;
     var file_reader = file.reader(&file_buffer);
 
+    const b = &brainfuck;
+    _ = b;
+
+    const allocator = std.heap.page_allocator;
+    const commands = try allocator.alloc(u8, 1024);
+    defer allocator.free(commands);
+
+    var tail: usize = 0;
     while (true) {
         if (file_reader.interface.takeDelimiter('\n')) |line| {
-            if (line) |string| {
-                std.debug.print("{s}", .{string});
+            if (line) |cur| {
+                @memcpy(commands[tail .. tail + cur.len], cur);
+                tail += cur.len;
             } else {
                 break;
             }
@@ -40,10 +50,5 @@ pub fn main2() !void {
             }
         }
     }
-    // while (file_reader.interface.takeDelimiterExclusive('\n')) |line| {
-    //     std.debug.print("{s}", .{line});
-    // }
-
-    const b = &brainfuck;
-    b.init();
+    std.debug.print("{s}", .{commands[0..tail]});
 }
