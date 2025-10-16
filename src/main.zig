@@ -1,7 +1,7 @@
 const std = @import("std");
 const c = @import("c.zig").c;
 const Allocator = std.mem.Allocator;
-const Brainfuck = @import("brainfuck.zig").Brainfuck(i16, 30_000);
+const Brainfuck = @import("brainfuck.zig").Brainfuck(i32, 30_000);
 
 var brainfuck: Brainfuck = undefined;
 

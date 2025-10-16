@@ -42,6 +42,7 @@ pub fn Brainfuck(
                     },
                     '.' => self.output(),
                     ',' => self.input(),
+                    ' ', '\n', '\r', '\t' => {},
                     else => {
                         std.log.err("Unknown command {}", .{self.head});
                         return error.UnknownCommand;
@@ -118,7 +119,7 @@ pub fn Brainfuck(
         }
 
         fn input(self: *Self) void {
-            _ = self;
+            self.tape[self.head] = c.getchar();
         }
     };
 }
