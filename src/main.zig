@@ -5,12 +5,11 @@ const Brainfuck = @import("brainfuck.zig").Brainfuck(i16, 30_000);
 
 var brainfuck: Brainfuck = undefined;
 
-pub fn main() !void {
-    // main2() catch |err| {
-    //     std.log.err("{}", .{err});
-    //     c.abort();
-    // };
-    try main2();
+pub fn main() void {
+    main2() catch |err| {
+        std.log.err("{}", .{err});
+        c.abort();
+    };
 }
 
 pub fn main2() !void {
