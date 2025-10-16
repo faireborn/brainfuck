@@ -1,12 +1,16 @@
 const std = @import("std");
 const c = @import("c.zig").c;
 const Allocator = std.mem.Allocator;
-const Brainfuck = @import("brainfuck.zig").Brainfuck(u8, 30_000);
+const Brainfuck = @import("brainfuck.zig").Brainfuck(i16, 30_000);
 
 var brainfuck: Brainfuck = undefined;
 
-pub fn main() void {
-    main2() catch c.abort();
+pub fn main() !void {
+    // main2() catch |err| {
+    //     std.log.err("{}", .{err});
+    //     c.abort();
+    // };
+    try main2();
 }
 
 pub fn main2() !void {
@@ -17,7 +21,7 @@ pub fn main2() !void {
 
     if (args.len != 2) {
         std.log.err("Usage: {s} file_name", .{args[0]});
-        c.abort();
+        return error.UsageError;
     }
 
     const file_name = args[1];
@@ -26,9 +30,6 @@ pub fn main2() !void {
 
     var file_buffer: [1024]u8 = undefined;
     var file_reader = file.reader(&file_buffer);
-
-    const b = &brainfuck;
-    _ = b;
 
     const allocator = std.heap.page_allocator;
     const commands = try allocator.alloc(u8, 1024);
@@ -45,10 +46,13 @@ pub fn main2() !void {
             }
         } else |err| {
             switch (err) {
-                error.ReadFailed => std.log.err("{}", .{err}),
-                error.StreamTooLong => std.log.err("{}", .{err}),
+                error.ReadFailed => std.log.err("Read Error", .{}),
+                error.StreamTooLong => std.log.err("Stream Is Too Long!!", .{}),
             }
         }
     }
-    std.debug.print("{s}", .{commands[0..tail]});
+
+    const b = &brainfuck;
+    b.set(commands[0..tail]);
+    try b.exe();
 }
