@@ -18,6 +18,15 @@ pub fn Brainfuck(
 
         const Self = @This();
 
+        pub fn init(commands: []u8) Self {
+            return .{
+                .head = 0,
+                .tape = [_]T{0} ** tape_size,
+                .ip = 0,
+                .commands = commands,
+            };
+        }
+
         pub fn set(self: *Self, commands: []u8) void {
             self.head = 0;
             self.tape = [_]T{0} ** tape_size;

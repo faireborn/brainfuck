@@ -3,16 +3,7 @@ const c = @import("c.zig").c;
 const Allocator = std.mem.Allocator;
 const Brainfuck = @import("brainfuck.zig").Brainfuck(i32, 30_000);
 
-var brainfuck: Brainfuck = undefined;
-
-pub fn main() void {
-    main2() catch |err| {
-        std.log.err("{}", .{err});
-        c.abort();
-    };
-}
-
-pub fn main2() !void {
+pub fn main() !void {
     var general_purpose_allocator: std.heap.GeneralPurposeAllocator(.{}) = .init;
     const gpa = general_purpose_allocator.allocator();
     const args = try std.process.argsAlloc(gpa);
@@ -51,7 +42,6 @@ pub fn main2() !void {
         }
     }
 
-    const b = &brainfuck;
-    b.set(commands[0..tail]);
+    var b = Brainfuck.init(commands[0..tail]);
     try b.exe();
 }
