@@ -39,6 +39,7 @@ pub fn main() !void {
                 error.ReadFailed => std.log.err("Read Error", .{}),
                 error.StreamTooLong => std.log.err("Stream Is Too Long!!", .{}),
             }
+            return error.FileReadError;
         }
     }
 
