@@ -27,13 +27,6 @@ pub fn Brainfuck(
             };
         }
 
-        pub fn set(self: *Self, commands: []u8) void {
-            self.head = 0;
-            self.tape = [_]T{0} ** tape_size;
-            self.ip = 0;
-            self.commands = commands;
-        }
-
         pub fn exe(self: *Self) BfError!void {
             while (self.ip < self.commands.len) {
                 switch (self.commands[self.ip]) {
@@ -59,14 +52,6 @@ pub fn Brainfuck(
                 }
                 self.ip += 1;
             }
-        }
-
-        pub fn getTape(self: *Self) !void {
-            std.debug.print("tape: {any}\n", .{&self.tape});
-        }
-
-        pub fn getCommands(self: *Self) !void {
-            std.debug.print("{s}\n", .{self.commands});
         }
 
         fn inc(self: *Self) void {
